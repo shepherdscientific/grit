@@ -1,9 +1,10 @@
 import './App.css';
-import gri from './gri'
+import Model from './Gri'
 
 function App() {
   return (
     <div className="App">
+      <Model/>
     </div>
   );
 }
