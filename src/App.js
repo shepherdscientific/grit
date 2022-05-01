@@ -2,7 +2,7 @@ import './App.css';
 import Model from './Grit'
 import { Canvas } from '@react-three/fiber'
 import React, { useRef, useState } from 'react'
-import { OrbitControls, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
+import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
 
 function Grit(props){
   return (
@@ -51,6 +51,8 @@ function App() {
     // <div className="App">
     <Canvas>
       <OrbitControls/>
+      <Cloud/>
+      <Sparkles/>
       <Stars/>
       <color attach="background" args={['#191920']} />
       <fog attach="fog" args={['#191920', 0, 15]} />
