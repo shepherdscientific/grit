@@ -1,5 +1,5 @@
 import './App.css';
-import Model from './Grit'
+import Model from './Gri'
 import { Canvas } from '@react-three/fiber'
 import React, { useRef, useState } from 'react'
 import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
@@ -7,8 +7,8 @@ import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial
 function Grit(props){
   return (
     <>
-    <Model position={[0, -0.5, 0]} rotation={[4 * Math.PI / 7 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
-    <BoxCube position={[2.465, 0.85, -1.47]} />
+    <Model position={[0, -0.45, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
+    <BoxCube position={[0, 0, 0]} />
     </>
   );
 } 
@@ -17,6 +17,7 @@ function Box(props) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
+  const size = .35
   // useFrame((state, delta) => (mesh.current.rotation.x += 0.01))
   return (
     <mesh
@@ -26,7 +27,7 @@ function Box(props) {
       onClick={(event) => setActive(!active)}
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}>
-      <boxGeometry args={[1.25, 1.25, 1.25]} />
+      <boxGeometry args={[size, size, size]} />
       <meshStandardMaterial color={hovered ? 'yellow' : 'green'} />
     </mesh>
   );
@@ -36,8 +37,15 @@ function BoxCube(props){
   // Calculate positions of eight or eighteen cubes
   return (
     <>
-    <Box position={props.position} />
-    <Box />
+    <Box position={[.8, 1.2, -.5]} />
+    <Box position={[1.45, 1.2, -.5]} />
+    <Box color={"orange"} position={[.8, 0.73, -.5]} />
+    <Box position={[1.45, 0.73, -.5]} />  
+    <Box position={[.8, 1.2, -1.15]} />
+    <Box position={[1.45, 1.2, -1.15]} />
+    <Box position={[.8, 0.73, -1.15]} />
+    <Box position={[1.45, 0.73, -1.15]} />        
+    <Box position={[2.45, 0.1, 0]} rotation={[ Math.PI / 4 , Math.PI / 4 , Math.PI / 4]}/>
     {/* <Box position={props.position} />
     <Box position={props.position} />
     <Box position={props.position} /> */}
