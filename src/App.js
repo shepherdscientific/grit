@@ -6,10 +6,10 @@ import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial
 
 function Grit(props){
   return (
-    <>
-    <Model position={[0, -0.45, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
-    <BoxCube position={[0.8, -0.45, 0]} />
-    </>
+    <mesh {...props}>
+    <Model position={[0, 0, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
+    <BoxCube position={[0.8, 0, 0]} />
+    </mesh>
   );
 } 
 
@@ -64,12 +64,12 @@ function App() {
       <fog attach="fog" args={['#191920', 0, 15]} />
       <Environment preset="city" />   
       <group position={[0, -0.2, 0]}>
-        <pointLight position={[10, 10, 10]} />
-        <Grit position={[0, -10, 0]} />
+        <pointLight position={[10, 10, 10]} intensity={5} />
+        <Grit position={[0, -.47, 0]} />
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
           <planeGeometry args={[50, 50]} />
           <MeshReflectorMaterial
-            blur={[300, 100]}
+            blur={[700, 1000]}
             resolution={2048}
             mixBlur={1}
             mixStrength={40}
