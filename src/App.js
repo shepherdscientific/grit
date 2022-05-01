@@ -8,7 +8,7 @@ function Grit(props){
   return (
     <>
     <Model position={[0, -0.45, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
-    <BoxCube position={[0, 0, 0]} />
+    <BoxCube position={[0.8, -0.45, 0]} />
     </>
   );
 } 
@@ -36,20 +36,18 @@ function Box(props) {
 function BoxCube(props){
   // Calculate positions of eight or eighteen cubes
   return (
-    <>
-    <Box position={[.8, 1.2, -.5]} />
-    <Box position={[1.45, 1.2, -.5]} />
-    <Box color={"orange"} position={[.8, 0.73, -.5]} />
-    <Box position={[1.45, 0.73, -.5]} />  
-    <Box position={[.8, 1.2, -1.15]} />
-    <Box position={[1.45, 1.2, -1.15]} />
-    <Box position={[.8, 0.73, -1.15]} />
-    <Box position={[1.45, 0.73, -1.15]} />        
-    <Box position={[2.45, 0.1, 0]} rotation={[ Math.PI / 4 , Math.PI / 4 , Math.PI / 4]}/>
-    {/* <Box position={props.position} />
-    <Box position={props.position} />
-    <Box position={props.position} /> */}
-    </>
+    <mesh {...props}>
+      
+      <Box position={[0, 1.65, -.5]} />
+      <Box position={[.65, 1.65, -.5]} />
+      <Box position={[0, 1.18, -.5]} />
+      <Box position={[.65, 1.18, -.5]} />  
+      <Box position={[0, 1.65, -1.15]} />
+      <Box position={[.65, 1.65, -1.15]} />
+      <Box position={[0, 1.18, -1.15]} />
+      <Box position={[.65, 1.18, -1.15]} />        
+      <Box position={[1.45, 0.6 , 0]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>
+    </mesh>
   );
 }
 

@@ -18,7 +18,7 @@ export default function Model({ ...props }) {
             material={materials['Material.001']} 
             rotation={[Math.PI / 2, 0, 0]}
             position={[0 , .27, 0 ]}
-            scale={active1 ? 1.1 : 1}
+            scale={active1 ? 1.02 : 1}
             onClick={(event) => setActive1(!active1)}      
             onPointerOver={(event) => setHover1(true)}
             onPointerOut={(event) => setHover1(false)}
@@ -28,7 +28,7 @@ export default function Model({ ...props }) {
       <mesh geometry={nodes.Text004.geometry} 
             material={materials['Material.003']} 
             rotation={[Math.PI / 2, 0, 0]}
-            scale={active2 ? 1.1 : 1}
+            scale={active2 ? 1.02 : 1}
             onClick={(event) => setActive2(!active2)}
             onPointerOver={(event) => setHover2(true)}
             onPointerOut={(event) => setHover2(false)}
