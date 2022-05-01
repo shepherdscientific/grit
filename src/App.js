@@ -1,6 +1,6 @@
 import './App.css';
 import Model from './Gri'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import React, { useRef, useState } from 'react'
 import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
 
@@ -8,7 +8,8 @@ function Grit(props){
   return (
     <mesh {...props}>
     <Model position={[0, 0, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
-    <BoxCube position={[0.8, 0, 0]} />
+    <BoxCube position={[1.125, 1.4, -.85]} />
+    <Box position={[3.45, 0.6 , -1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
     </mesh>
   );
 } 
@@ -35,18 +36,25 @@ function Box(props) {
 
 function BoxCube(props){
   // Calculate positions of eight or eighteen cubes
-  return (
-    <mesh {...props}>
+    const mesh = useRef()
+    console.log(mesh)
+    const [hovered, setHover] = useState(false)
+    const [active, setActive] = useState(false)    
+    useFrame((state, delta) => (mesh.current.rotation.y += 0.01))  
+    const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
+    return (
+    <mesh {...props}
+          ref={mesh}
+      >
+      <Box position={[x_pos, y_pos, -z_pos]} />
+      <Box position={[-x_pos, y_pos, -z_pos]} />
+      <Box position={[x_pos, -y_pos, -z_pos]} />
+      <Box position={[-x_pos, -y_pos, -z_pos]} />  
+      <Box position={[x_pos, y_pos, z_pos]} />
+      <Box position={[-x_pos, y_pos, z_pos]} />
+      <Box position={[x_pos, -y_pos, z_pos]} />
+      <Box position={[-x_pos, -y_pos, z_pos]} />        
       
-      <Box position={[0, 1.65, -.5]} />
-      <Box position={[.65, 1.65, -.5]} />
-      <Box position={[0, 1.18, -.5]} />
-      <Box position={[.65, 1.18, -.5]} />  
-      <Box position={[0, 1.65, -1.15]} />
-      <Box position={[.65, 1.65, -1.15]} />
-      <Box position={[0, 1.18, -1.15]} />
-      <Box position={[.65, 1.18, -1.15]} />        
-      <Box position={[1.45, 0.6 , 0]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>
     </mesh>
   );
 }
