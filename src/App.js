@@ -13,7 +13,23 @@ function Grit(props){
     </mesh>
   );
 } 
-
+function Sphere(props) {
+  const mesh = useRef(null)
+  const [hovered, setHover] = useState(false)
+  const [active, setActive] = useState(false)
+  return (
+    <mesh
+      {...props}
+      ref={mesh}
+      scale={active ? 1.1 : 1}
+      onClick={(event) => setActive(!active)}
+      onPointerOver={(event) => setHover(true)}
+      onPointerOut={(event) => setHover(false)}>
+      <sphereGeometry args={[.025,16,16]} />
+      <meshStandardMaterial color={hovered ? 'yellow' : 'red'} />
+    </mesh>
+  );
+}
 function Box(props) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
@@ -48,12 +64,13 @@ function BoxCube(props){
       >
       <Box position={[x_pos, y_pos, -z_pos]} />
       <Box position={[-x_pos, y_pos, -z_pos]} />
-      <Box position={[x_pos, -y_pos, -z_pos]} />
+      <Box position={[x_pos, -y_pos, -z_pos]}  />
       <Box position={[-x_pos, -y_pos, -z_pos]} />  
       <Box position={[x_pos, y_pos, z_pos]} />
       <Box position={[-x_pos, y_pos, z_pos]} />
       <Box position={[x_pos, -y_pos, z_pos]} />
-      <Box position={[-x_pos, -y_pos, z_pos]} />        
+      <Box position={[-x_pos, -y_pos, z_pos]} />    
+      <Sphere position={[0,0,0]} />
       
     </mesh>
   );
