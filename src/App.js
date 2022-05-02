@@ -1,18 +1,19 @@
 import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
-import React, { useRef, useState } from 'react'
-import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment } from '@react-three/drei'
+import React, { Suspense, useRef, useState } from 'react'
+import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment, Html, useProgress } from '@react-three/drei'
 
 function Grit(props){
   return (
     <mesh {...props}>
     <Model position={[0, 0, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
-    <BoxCube position={[1.125, 1.4, -.85]} />
+    <BoxCube position={[1.125, 1.4, -.85]} rotation={[ 0 , 0 , 0]}/>
     <Box position={[3.45, 0.6 , -1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
     </mesh>
   );
 } 
+
 function Sphere(props) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
@@ -53,15 +54,22 @@ function Box(props) {
 function BoxCube(props){
   // Calculate positions of eight or eighteen cubes
     const mesh = useRef()
-    console.log(mesh)
     const [hovered, setHover] = useState(false)
     const [active, setActive] = useState(false)    
-    useFrame((state, delta) => (mesh.current.rotation.y += 0.01))  
+    // console.log(mesh.current.rotation._y)
+    console.log(Math.PI)
+    useFrame((state, delta) => {
+      mesh.current.rotation.y += 0.01
+      if ( mesh.current.rotation.y.toFixed(2) % Math.PI.toFixed(2)/2 < 0.005) {
+        console.log(  mesh.current )
+      }
+    })
+    
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
     return (
-    <mesh {...props}
-          ref={mesh}
-      >
+    <mesh {...props} ref={mesh}>
+      <spotLight />
+      <Sphere name={"pointLight"} position={[0,0,0]} />
       <Box position={[x_pos, y_pos, -z_pos]} />
       <Box position={[-x_pos, y_pos, -z_pos]} />
       <Box position={[x_pos, -y_pos, -z_pos]}  />
@@ -69,17 +77,61 @@ function BoxCube(props){
       <Box position={[x_pos, y_pos, z_pos]} />
       <Box position={[-x_pos, y_pos, z_pos]} />
       <Box position={[x_pos, -y_pos, z_pos]} />
-      <Box position={[-x_pos, -y_pos, z_pos]} />    
-      <Sphere position={[0,0,0]} />
-      
+      <Box position={[-x_pos, -y_pos, z_pos]} />          
     </mesh>
   );
 }
 
+function Loader() {
+  const { progress } = useProgress()
+  return <Html center>{progress} % loaded</Html>
+}
+
+// Lights
+function KeyLight({ brightness, color }) {
+  return (
+    <rectAreaLight
+      width={3}
+      height={3}
+      color={color}
+      intensity={brightness}
+      position={[-2, 0, 5]}
+      lookAt={[0, 0, 0]}
+      penumbra={1}
+      castShadow
+    />
+  );
+}
+function FillLight({ brightness, color }) {
+  return (
+    <rectAreaLight
+      width={3}
+      height={3}
+      intensity={brightness}
+      color={color}
+      position={[2, 1, 4]}
+      lookAt={[0, 0, 0]}
+      penumbra={2}
+      castShadow
+    />
+  );
+}
+function RimLight({ brightness, color }) {
+  return (
+    <rectAreaLight
+      width={2}
+      height={2}
+      intensity={brightness}
+      color={color}
+      position={[1, 4, -2]}
+      rotation={[0, 180, 0]}
+      castShadow
+    />
+  );
+}
 
 function App() {
   return (
-    // <div className="App">
     <Canvas>
       <OrbitControls/>
       <Cloud/>
@@ -89,8 +141,13 @@ function App() {
       <fog attach="fog" args={['#191920', 0, 15]} />
       <Environment preset="city" />   
       <group position={[0, -0.2, 0]}>
-        <pointLight position={[10, 10, 10]} intensity={5} />
-        <Grit position={[0, -.47, 0]} />
+        {/* <pointLight position={[10, 10, 10]} intensity={5} /> */}
+        {/* <KeyLight brightness={5.6} color="#ffbdf4" />
+        <FillLight brightness={2.6} color="#bdefff" />
+        <RimLight brightness={54} color="#fff" />         */}
+        <Suspense fallback={<Loader/>}>
+          <Grit position={[0, -.47, 0]} />
+        </Suspense>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
           <planeGeometry args={[50, 50]} />
           <MeshReflectorMaterial
@@ -108,7 +165,6 @@ function App() {
         </mesh>
       </group>               
     </Canvas>
-    // </div>
   );
 }
 
