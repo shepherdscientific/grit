@@ -61,24 +61,24 @@ function BoxCube(props){
     const mesh = useRef()
     const [on, setOn] = useState(false)
     const [count, setCounter] = useState(0)
+    const [tilt, setTilt] = useState(0)
+    const [space, setSpacing] = useState(0)
+
     useFrame(({clock}) => {
-      mesh.current.rotation.y = clock.getElapsedTime()
-      if (clock.getElapsedTime() > Math.PI / 2 ){
-        clock.stop()
+      mesh.current.rotation.y += ( on ? 0 : 0.05 )
+      if (mesh.current.rotation.y % Math.PI / 4 <= 0.1 ){
         setOn(true)
         setTimeout( () => {
-            // console.log(count)
             setCounter(count + 1)
             setOn(false)
-            clock.start()
           },
         1000)
       }
     })
     useEffect(()=> {
       if (count % 3 === 0){
-        console.log(count)
-        // setCounter(0)
+        // console.log(count)
+        console.log(count,mesh.current.rotation.y)
       }
     },[count])
     // breathing and tilting cubes
@@ -88,14 +88,15 @@ function BoxCube(props){
     <FlashingContext.Provider value={on}>
       <mesh {...props} ref={mesh}>
         <Sphere name={"pointLight"} position={[0,0,0]} />
-        <Box position={[x_pos, y_pos, -z_pos]} />
-        <Box position={[-x_pos, y_pos, -z_pos]} />
-        <Box position={[x_pos, -y_pos, -z_pos]}/>
-        <Box position={[-x_pos, -y_pos, -z_pos]} />  
-        <Box position={[x_pos, y_pos, z_pos]} />
-        <Box position={[-x_pos, y_pos, z_pos]} />
-        <Box position={[x_pos, -y_pos, z_pos]} />
-        <Box position={[-x_pos, -y_pos, z_pos]} />          
+        <Box position={[ x_pos,  y_pos,  z_pos]} name={"top-right-front"}/>
+        <Box position={[ x_pos,  y_pos, -z_pos]} name={"top-right-rear"}/>        
+        <Box position={[ x_pos, -y_pos,  z_pos]} name={"bottom-right-front"} />
+        <Box position={[ x_pos, -y_pos, -z_pos]} name={"bottom-right-rear"} />
+        <Box position={[-x_pos,  y_pos,  z_pos]} name={"top-left-front"} />
+        <Box position={[-x_pos,  y_pos, -z_pos]} name={"top-left-rear"} />        
+        <Box position={[-x_pos, -y_pos,  z_pos]} name={"bottom-left-front"} />          
+        <Box position={[-x_pos, -y_pos, -z_pos]} name={"bottom-left-rear"} />  
+                
       </mesh>
     </FlashingContext.Provider>
   );
