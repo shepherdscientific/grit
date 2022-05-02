@@ -2,7 +2,7 @@ import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
 import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
-import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment, Html, useProgress } from '@react-three/drei'
+import { OrbitControls, Cloud, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
 
 function Grit(props){
   return (
@@ -21,23 +21,9 @@ function Sphere(props) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
-  const [on, setOn] = useState(false)
-  useFrame(({clock}) => {
-    if (clock.getElapsedTime() > Math.PI  ){
-      console.log('on')
-      setOn(true)
-      mesh.current.material.color.setRGB(1,1,1)
-      setTimeout( () => {
-          mesh.current.material.color.setRGB(1,0,0)
-          setOn(false)
-        },
-      300)
-      clock.start()
-      console.log('off')
-    }
-  })  
+  const flashing = useContext(FlashingContext);
+   
   return (
-    <FlashingContext.Provider value={on ? 10 : 0 }>
       <mesh
         {...props}
         ref={mesh}
@@ -47,9 +33,8 @@ function Sphere(props) {
         onPointerOut={(event) => setHover(false)}>
         <BallLight brightness={54} color="#fff"/>
         <sphereGeometry args={[.025,16,16]} />
-        <meshStandardMaterial color={hovered ? 'yellow' : 'red'} />
+        <meshStandardMaterial color={( flashing || hovered ) ? 'yellow' : 'red'} />
       </mesh>
-    </FlashingContext.Provider>
   );
 }
 function Box(props) {
@@ -57,7 +42,6 @@ function Box(props) {
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
   const size = .35
-  // useFrame((state, delta) => (mesh.current.rotation.x += 0.01))
   return (
     <mesh
       {...props}
@@ -73,28 +57,38 @@ function Box(props) {
 }
 
 function BoxCube(props){
-  // Calculate positions of eight cubes
+  // symmetric positioning of eight cubes
     const mesh = useRef()
-    const [hovered, setHover] = useState(false)
-    const [active, setActive] = useState(false)    
+    const [on, setOn] = useState(false)
     useFrame(({clock}) => {
-      mesh.current.rotation.y = (clock.getElapsedTime())
-    })
+      mesh.current.rotation.y = clock.getElapsedTime()
+      if (clock.getElapsedTime() > Math.PI / 2 ){
+        clock.stop()
+        setOn(true)
+        setTimeout( () => {
+            setOn(false)
+            clock.start()
+          },
+        1000)
+      }
+    })      
     // breathing and tilting cubes
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
     // const [ x_pos, y_pos, z_pos ] = [0.18,0.18,0.18]
     return (
-    <mesh {...props} ref={mesh}>
-      <Sphere name={"pointLight"} position={[0,0,0]} />
-      <Box position={[x_pos, y_pos, -z_pos]} />
-      <Box position={[-x_pos, y_pos, -z_pos]} />
-      <Box position={[x_pos, -y_pos, -z_pos]}/>
-      <Box position={[-x_pos, -y_pos, -z_pos]} />  
-      <Box position={[x_pos, y_pos, z_pos]} />
-      <Box position={[-x_pos, y_pos, z_pos]} />
-      <Box position={[x_pos, -y_pos, z_pos]} />
-      <Box position={[-x_pos, -y_pos, z_pos]} />          
-    </mesh>
+    <FlashingContext.Provider value={on}>
+      <mesh {...props} ref={mesh}>
+        <Sphere name={"pointLight"} position={[0,0,0]} />
+        <Box position={[x_pos, y_pos, -z_pos]} />
+        <Box position={[-x_pos, y_pos, -z_pos]} />
+        <Box position={[x_pos, -y_pos, -z_pos]}/>
+        <Box position={[-x_pos, -y_pos, -z_pos]} />  
+        <Box position={[x_pos, y_pos, z_pos]} />
+        <Box position={[-x_pos, y_pos, z_pos]} />
+        <Box position={[x_pos, -y_pos, z_pos]} />
+        <Box position={[-x_pos, -y_pos, z_pos]} />          
+      </mesh>
+    </FlashingContext.Provider>
   );
 }
 
@@ -106,9 +100,8 @@ function Loader() {
 // Lights
 function BallLight({ brightness, color }){
   const flashing = useContext(FlashingContext);  
-  const [intensity,setIntensity] = useState("");
   return(
-    <pointLight intensity={flashing}/>
+    <pointLight intensity={flashing  ? 10 : 0 }/>
   );
 }
 
