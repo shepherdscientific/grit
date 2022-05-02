@@ -74,17 +74,14 @@ function Box(props) {
 }
 
 function BoxCube(props){
-  // Calculate positions of eight or eighteen cubes
+  // Calculate positions of eight cubes
     const mesh = useRef()
     const [hovered, setHover] = useState(false)
     const [active, setActive] = useState(false)    
     useFrame(({clock}) => {
       mesh.current.rotation.y = (clock.getElapsedTime())
-      // if ( mesh.current.rotation.y.toFixed(2) % Math.PI.toFixed(2) < 0.02) {
-      //   console.log(  mesh.current )
-      // }
     })
-    
+    // breathing and tilting cubes
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
     // const [ x_pos, y_pos, z_pos ] = [0.18,0.18,0.18]
     return (
@@ -92,7 +89,7 @@ function BoxCube(props){
       <Sphere name={"pointLight"} position={[0,0,0]} />
       <Box position={[x_pos, y_pos, -z_pos]} />
       <Box position={[-x_pos, y_pos, -z_pos]} />
-      <Box position={[x_pos, -y_pos, -z_pos]}  />
+      <Box position={[x_pos, -y_pos, -z_pos]}/>
       <Box position={[-x_pos, -y_pos, -z_pos]} />  
       <Box position={[x_pos, y_pos, z_pos]} />
       <Box position={[-x_pos, y_pos, z_pos]} />
@@ -169,10 +166,9 @@ function App() {
       <fog attach="fog" args={['#191920', 0, 15]} />
       <Environment preset="city" />   
       <group position={[0, -0.2, 0]}>
-        {/* <pointLight position={[10, 10, 10]} intensity={5} /> */}
-        {/* <KeyLight brightness={5.6} color="#ffbdf4" /> */}
-        {/* <FillLight brightness={2.6} color="#bdefff" /> */}
-        {/* <RimLight brightness={54} color="#fff" />         */}
+        <KeyLight brightness={5.6} color="#ffbdf4" />
+        <FillLight brightness={2.6} color="#bdefff" />
+        <RimLight brightness={54} color="#fff" />        
         <Suspense fallback={<Loader/>}>
           <Grit position={[0, -.47, 0]} />
         </Suspense>
