@@ -37,7 +37,7 @@ function Sphere(props) {
     }
   })  
   return (
-    <FlashingContext.Provider value={on ? 5 : .5 }>
+    <FlashingContext.Provider value={on ? 10 : 0 }>
       <mesh
         {...props}
         ref={mesh}
@@ -45,8 +45,7 @@ function Sphere(props) {
         onClick={(event) => setActive(!active)}
         onPointerOver={(event) => setHover(true)}
         onPointerOut={(event) => setHover(false)}>
-        <pointLight intensity={5} brightness={15.6} color="#ffbdf4"/>
-        <BallLight/>
+        <BallLight brightness={54} color="#fff"/>
         <sphereGeometry args={[.025,16,16]} />
         <meshStandardMaterial color={hovered ? 'yellow' : 'red'} />
       </mesh>
