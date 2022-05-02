@@ -18,6 +18,9 @@ function Sphere(props) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
+  useFrame(({clock}) => {
+    (clock.getElapsedTime() % Math.PI < 0.1 ? mesh.current.material.color.setRGB(1,1,1) : mesh.current.material.color.setRGB(1,0,0))
+  })  
   return (
     <mesh
       {...props}
@@ -26,6 +29,7 @@ function Sphere(props) {
       onClick={(event) => setActive(!active)}
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}>
+      <spotLight />
       <sphereGeometry args={[.025,16,16]} />
       <meshStandardMaterial color={hovered ? 'yellow' : 'red'} />
     </mesh>
@@ -56,19 +60,17 @@ function BoxCube(props){
     const mesh = useRef()
     const [hovered, setHover] = useState(false)
     const [active, setActive] = useState(false)    
-    // console.log(mesh.current.rotation._y)
-    console.log(Math.PI)
-    useFrame((state, delta) => {
-      mesh.current.rotation.y += 0.01
-      if ( mesh.current.rotation.y.toFixed(2) % Math.PI.toFixed(2)/2 < 0.005) {
-        console.log(  mesh.current )
-      }
+    useFrame(({clock}) => {
+      mesh.current.rotation.y = (clock.getElapsedTime())
+      // if ( mesh.current.rotation.y.toFixed(2) % Math.PI.toFixed(2) < 0.02) {
+      //   console.log(  mesh.current )
+      // }
     })
     
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
+    // const [ x_pos, y_pos, z_pos ] = [0.18,0.18,0.18]
     return (
     <mesh {...props} ref={mesh}>
-      <spotLight />
       <Sphere name={"pointLight"} position={[0,0,0]} />
       <Box position={[x_pos, y_pos, -z_pos]} />
       <Box position={[-x_pos, y_pos, -z_pos]} />
