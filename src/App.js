@@ -1,7 +1,7 @@
 import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
-import React, { Suspense, useRef, useState } from 'react'
+import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
 import { OrbitControls, Cloud, Sparkles, Stars, useCursor, MeshReflectorMaterial, Image, Text, Environment, Html, useProgress } from '@react-three/drei'
 
 function Grit(props){
@@ -14,25 +14,43 @@ function Grit(props){
   );
 } 
 
+
+const FlashingContext = createContext();
+
 function Sphere(props) {
   const mesh = useRef(null)
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
+  const [on, setOn] = useState(false)
   useFrame(({clock}) => {
-    (clock.getElapsedTime() % Math.PI < 0.1 ? mesh.current.material.color.setRGB(1,1,1) : mesh.current.material.color.setRGB(1,0,0))
+    if (clock.getElapsedTime() > Math.PI  ){
+      console.log('on')
+      setOn(true)
+      mesh.current.material.color.setRGB(1,1,1)
+      setTimeout( () => {
+          mesh.current.material.color.setRGB(1,0,0)
+          setOn(false)
+        },
+      300)
+      clock.start()
+      console.log('off')
+    }
   })  
   return (
-    <mesh
-      {...props}
-      ref={mesh}
-      scale={active ? 1.1 : 1}
-      onClick={(event) => setActive(!active)}
-      onPointerOver={(event) => setHover(true)}
-      onPointerOut={(event) => setHover(false)}>
-      <spotLight />
-      <sphereGeometry args={[.025,16,16]} />
-      <meshStandardMaterial color={hovered ? 'yellow' : 'red'} />
-    </mesh>
+    <FlashingContext.Provider value={on ? 5 : .5 }>
+      <mesh
+        {...props}
+        ref={mesh}
+        scale={active ? 1.1 : 1}
+        onClick={(event) => setActive(!active)}
+        onPointerOver={(event) => setHover(true)}
+        onPointerOut={(event) => setHover(false)}>
+        <pointLight intensity={5} brightness={15.6} color="#ffbdf4"/>
+        <BallLight/>
+        <sphereGeometry args={[.025,16,16]} />
+        <meshStandardMaterial color={hovered ? 'yellow' : 'red'} />
+      </mesh>
+    </FlashingContext.Provider>
   );
 }
 function Box(props) {
@@ -90,6 +108,14 @@ function Loader() {
 }
 
 // Lights
+function BallLight({ brightness, color }){
+  const flashing = useContext(FlashingContext);  
+  const [intensity,setIntensity] = useState("");
+  return(
+    <pointLight intensity={flashing}/>
+  );
+}
+
 function KeyLight({ brightness, color }) {
   return (
     <rectAreaLight
@@ -144,9 +170,9 @@ function App() {
       <Environment preset="city" />   
       <group position={[0, -0.2, 0]}>
         {/* <pointLight position={[10, 10, 10]} intensity={5} /> */}
-        {/* <KeyLight brightness={5.6} color="#ffbdf4" />
-        <FillLight brightness={2.6} color="#bdefff" />
-        <RimLight brightness={54} color="#fff" />         */}
+        {/* <KeyLight brightness={5.6} color="#ffbdf4" /> */}
+        {/* <FillLight brightness={2.6} color="#bdefff" /> */}
+        {/* <RimLight brightness={54} color="#fff" />         */}
         <Suspense fallback={<Loader/>}>
           <Grit position={[0, -.47, 0]} />
         </Suspense>
