@@ -13,7 +13,7 @@ export default function Model({ ...props }) {
   const [active1, setActive1] = useState(false)  
   const [active2, setActive2] = useState(false)  
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} {...props} dispose={null} >
       <mesh geometry={nodes.Text003.geometry}
             material={materials['Material.001']} 
             rotation={[Math.PI / 2, 0, 0]}
