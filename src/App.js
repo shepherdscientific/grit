@@ -69,7 +69,7 @@ function BoxCube(props){
         setOn(true)
         count % 3 === 0 ? setSpacing(Math.sin(clock.getElapsedTime())/10) : setSpacing(0)
         setTimeout( () => {
-            console.log(mesh.current.children.find( box => box.name === "top-right-front"))
+            // console.log(mesh.current.children.find( box => box.name === "top-right-front"))
             setCounter(count + 1)
             setOn(false)
           },
