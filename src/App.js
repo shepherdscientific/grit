@@ -60,7 +60,7 @@ function Box(props) {
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}>
       <boxGeometry args={[size, size, size]} />
-      <meshStandardMaterial color={hovered ? 'yellow' : 'green'} />
+      <meshStandardMaterial color={hovered ? 'yellow' : props.color } />
     </animated.mesh>
   );
 }
@@ -86,8 +86,15 @@ function BoxCube(props){
       }
     })
     const [flip, set] = useState(false)
-    const {scale} = useSpring({ 
+    const springs = useSpring({ 
       scale: on ? 1.15 : 1,
+      // to: { opacity: 1 },
+      // from: { opacity: 0 },
+      // reset: true,
+      // reverse: flip,
+      // delay: 200,
+      config: config.wobbly,
+      // onRest: () => set(!flip),
     })
     // breathing and tilting cubes
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
@@ -100,14 +107,14 @@ function BoxCube(props){
         
        >
         <Sphere name={"pointLight"} position={[0,0,0]} />
-        <Box scale={scale} position={[ x_pos,  y_pos,  z_pos]} name={"top-right-front"}/>
-        <Box position={[ x_pos,  y_pos, -z_pos]} name={"top-right-rear"}/>        
-        <Box position={[ x_pos, -y_pos,  z_pos]} name={"bottom-right-front"} />
-        <Box position={[ x_pos, -y_pos, -z_pos]} name={"bottom-right-rear"} />
-        <Box position={[-x_pos,  y_pos,  z_pos]} name={"top-left-front"} />
-        <Box position={[-x_pos,  y_pos, -z_pos]} name={"top-left-rear"} />        
-        <Box position={[-x_pos, -y_pos,  z_pos]} name={"bottom-left-front"} />          
-        <Box position={[-x_pos, -y_pos, -z_pos]} name={"bottom-left-rear"} />  
+        <Box scale={springs.scale} style={springs} position={[ x_pos,  y_pos,  z_pos]} name={"top-right-front"} color="green"/>
+        <Box position={[ x_pos,  y_pos, -z_pos]} name={"top-right-rear"} color={'green'}/>        
+        <Box position={[ x_pos, -y_pos,  z_pos]} name={"bottom-right-front"} color={'green'}/>
+        <Box position={[ x_pos, -y_pos, -z_pos]} name={"bottom-right-rear"} color={'green'}/>
+        <Box position={[-x_pos,  y_pos,  z_pos]} name={"top-left-front"} color={'green'}/>
+        <Box position={[-x_pos,  y_pos, -z_pos]} name={"top-left-rear"} color={'green'}/>
+        <Box position={[-x_pos, -y_pos,  z_pos]} name={"bottom-left-front"} color={'gold'}/>
+        <Box position={[-x_pos, -y_pos, -z_pos]} name={"bottom-left-rear"} color={'green'}/>
                 
       </mesh>
     </FlashingContext.Provider>
