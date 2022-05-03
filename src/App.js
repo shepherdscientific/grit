@@ -1,8 +1,9 @@
 import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
-import React, { Suspense, useRef, useState, useContext, createContext, useEffect } from 'react'
+import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
 import { OrbitControls, Cloud, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
+// import { Clock } from 'three';
 
 function Grit(props){
   return (
@@ -63,24 +64,19 @@ function BoxCube(props){
     const [count, setCounter] = useState(0)
     const [tilt, setTilt] = useState(0)
     const [space, setSpacing] = useState(0)
-
     useFrame(({clock}) => {
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
-      if (mesh.current.rotation.y % Math.PI / 4 <= 0.1 ){
+      if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
+        count % 3 == 0 ? setSpacing(Math.sin(clock.getElapsedTime())) : setSpacing(0)
         setTimeout( () => {
+            console.log(space)
             setCounter(count + 1)
             setOn(false)
           },
         1000)
       }
     })
-    useEffect(()=> {
-      if (count % 3 === 0){
-        // console.log(count)
-        console.log(count,mesh.current.rotation.y)
-      }
-    },[count])
     // breathing and tilting cubes
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
     // const [ x_pos, y_pos, z_pos ] = [0.18,0.18,0.18]
