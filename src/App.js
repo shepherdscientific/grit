@@ -70,24 +70,23 @@ function BoxCube(props){
     const mesh = useRef()
     const [on, setOn] = useState(false)
     const [count, setCounter] = useState(0)
-    // const [tilt, setTilt] = useState(0)
+    const [tilt, setTilting] = useState(false)
     const [space, setSpacing] = useState(false)
     useFrame(({clock}) => {
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
       if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
         setTimeout( () => {
-            // console.log(space)
-            setCounter(count + 1)
-            // setSpacing(false)
             setOn(false)
           },
         1000)
       }
     })
+    // breathing and tilting cubes with spring on every 4th flash
     useEffect(() => {
-      count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
-
+      setCounter(count + 1)
+      count % 2 === 0 && on ? setSpacing(true): setSpacing(false)
+      count % 2 === 0 && on ? setTilting(true): setTilting(false)
     },[on])
     const [flip, set] = useState(false)
     const springs = useSpring({ 
@@ -99,24 +98,25 @@ function BoxCube(props){
       position_tlr:space ?  [-0.18, 0.18,-0.18] : [-0.325, 0.275,-0.325] ,
       position_blf:space ?  [-0.18,-0.18, 0.18] : [-0.325,-0.275, 0.325] ,
       position_blr:space ?  [-0.18,-0.18,-0.18] : [-0.325,-0.275,-0.325] ,
-
-
-
+      rotation_trf:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_trr:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_brf:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_brr:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_tlf:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_tlr:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_blf:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_blr:tilt ?  [0,0,0] : [0,0,0] ,
       reset: true,
       reverse: flip,
-      // delay: 200,
-      config: config.molasses,
+      delay: 200,
+      config: config.gentle,
       onRest: () => set(!flip),
     })
-    // breathing and tilting cubes
-    const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
-    // const [ x_pos, y_pos, z_pos ] = [0.18,0.18,0.18]
     return (
     <FlashingContext.Provider value={on}>
       <mesh 
         {...props} 
-        ref={mesh} 
-        
+        ref={mesh}         
        >
         <Sphere name={"pointLight"} position={[0,0,0]} />
         <Box position={springs.position_trf} name={"top-right-front"} color="green"/>
