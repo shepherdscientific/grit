@@ -60,7 +60,7 @@ function Box(props) {
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}>
       <boxGeometry args={[size, size, size]} />
-      <meshStandardMaterial color={hovered ? 'yellow' : props.color } />
+      <meshStandardMaterial color={hovered ? 'yellow' : (props.color ||'green') } />
     </animated.mesh>
   );
 }
