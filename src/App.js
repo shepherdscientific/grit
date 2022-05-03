@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
 import { OrbitControls, Cloud, Sky, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
+import { useSpring, animated, config } from '@react-spring/three'
 
 function Grit(props){
   return (
@@ -51,16 +52,16 @@ function Box(props) {
   const [active, setActive] = useState(false)
   const size = .35
   return (
-    <mesh 
+    <animated.mesh 
       {...props}
       ref={mesh}
-      scale={active ? 1.1 : 1}
+      // scale={active ? 1.1 : 1}
       onClick={(event) => setActive(!active)}
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}>
       <boxGeometry args={[size, size, size]} />
       <meshStandardMaterial color={hovered ? 'yellow' : 'green'} />
-    </mesh>
+    </animated.mesh>
   );
 }
 
@@ -84,14 +85,22 @@ function BoxCube(props){
         1000)
       }
     })
+    const [flip, set] = useState(false)
+    const {scale} = useSpring({ 
+      scale: on ? 1.15 : 1,
+    })
     // breathing and tilting cubes
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
     // const [ x_pos, y_pos, z_pos ] = [0.18,0.18,0.18]
     return (
     <FlashingContext.Provider value={on}>
-      <mesh {...props} ref={mesh}>
+      <mesh 
+        {...props} 
+        ref={mesh} 
+        
+       >
         <Sphere name={"pointLight"} position={[0,0,0]} />
-        <Box position={[ x_pos,  y_pos,  z_pos]} name={"top-right-front"}/>
+        <Box scale={scale} position={[ x_pos,  y_pos,  z_pos]} name={"top-right-front"}/>
         <Box position={[ x_pos,  y_pos, -z_pos]} name={"top-right-rear"}/>        
         <Box position={[ x_pos, -y_pos,  z_pos]} name={"bottom-right-front"} />
         <Box position={[ x_pos, -y_pos, -z_pos]} name={"bottom-right-rear"} />
@@ -104,7 +113,6 @@ function BoxCube(props){
     </FlashingContext.Provider>
   );
 }
-
 
 function App() {
   return (
