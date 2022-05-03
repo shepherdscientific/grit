@@ -70,24 +70,33 @@ function BoxCube(props){
   // symmetric positioning of eight cubes
     const mesh = useRef()
     const [on, setOn] = useState(false)
-    const [count, setCounter] = useState(0)
+    const [count, setCounter] = useState(1)
     const [tilt, setTilting] = useState(false)
     const [space, setSpacing] = useState(false)
     useFrame(({clock}) => {
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
       if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
-        setTimeout( () => {
-            setOn(false)
-          },
-        1000)
+        setTimeout( () => { setOn(false) }, 1000)
       }
     })
     // breathing and tilting cubes with spring on every 4th flash
     useEffect(() => {
-      setCounter(count + 1)
-      count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
-      count % 5 === 0 && on ? setTilting(true): setTilting(false)
+      if (on){
+        if (count % 3 === 0){
+          setSpacing(true)
+          setTimeout( () => { setSpacing(false) }, 1000)
+          console.log("spacing cubes",count)
+        }else if (count % 5 === 0){
+          setTilting(true)
+          setTimeout( () => { setTilting(false) }, 1000)
+          console.log("tilting cubes", count)
+        }
+        console.log("flashing cubes", count)
+        setCounter(count + 1)
+      }
+      // count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
+      // count % 5 === 0 && on ? setTilting(true): setTilting(false)
     },[on])
     const [flip, set] = useState(false)
     const springs = useSpring({ 
@@ -110,9 +119,10 @@ function BoxCube(props){
       reset: true,
       reverse: flip,
       delay: 200,
-      config: config.gentle,
+      config: config.wobbly,
       onRest: () => set(!flip),
     })
+    
     return (
     <FlashingContext.Provider value={on}>
       <mesh 
