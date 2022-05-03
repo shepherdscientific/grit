@@ -118,8 +118,8 @@ function App() {
       <OrbitControls/>
       <Cloud opacity={0.4} speed={0.4} width={25} depth={0.5} segments={5}/>
       <Sky distance={450000} sunPosition={[1, -1, 1]} inclination={9} azimuth={10.25}  />
+      <Stars radius={1} depth={200} count={10000} factor={4} saturation={0} fade speed={1} />
       {/* <Sparkles/> */}
-      {/* <Stars/> */}
       <color attach="background" args={['#191920']} />
       <fog attach="fog" args={['#191920', 0, 15]} />
       <Environment preset="city" />  
