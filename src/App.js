@@ -85,10 +85,10 @@ function BoxCube(props){
       if (on){
         if (count % 3 === 0){
           setSpacing(true)
-          setTimeout( () => { setSpacing(false) }, 1000)
+          setTimeout( () => { setSpacing(false) }, 2000)
         }else if (count % 5 === 0){
           setTilting(true)
-          setTimeout( () => { setTilting(false) }, 1000)
+          setTimeout( () => { setTilting(false) }, 2000)
         }else if (count % 2 === 0){
           // blink through the cubes
         }
@@ -96,6 +96,7 @@ function BoxCube(props){
       }
     },[on])
     const [flip, set] = useState(false)
+    const tiltAngle = Math.PI/5
     const springs = useSpring({ 
       position_trf:space ?  [ 0.18, 0.18, 0.18] : [ 0.325, 0.275, 0.325] ,
       position_trr:space ?  [ 0.18, 0.18,-0.18] : [ 0.325, 0.275,-0.325] ,
@@ -105,17 +106,17 @@ function BoxCube(props){
       position_tlr:space ?  [-0.18, 0.18,-0.18] : [-0.325, 0.275,-0.325] ,
       position_blf:space ?  [-0.18,-0.18, 0.18] : [-0.325,-0.275, 0.325] ,
       position_blr:space ?  [-0.18,-0.18,-0.18] : [-0.325,-0.275,-0.325] ,
-      rotation_trf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_trr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_brf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_brr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_tlf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_tlr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_blf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
-      rotation_blr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_trf:tilt ?  [  tiltAngle, tiltAngle, tiltAngle] : [0,0,0] ,
+      rotation_trr:tilt ?  [  tiltAngle, tiltAngle,-tiltAngle] : [0,0,0] ,
+      rotation_brf:tilt ?  [  tiltAngle,-tiltAngle, tiltAngle] : [0,0,0] ,
+      rotation_brr:tilt ?  [  tiltAngle,-tiltAngle,-tiltAngle] : [0,0,0] ,
+      rotation_tlf:tilt ?  [ -tiltAngle, tiltAngle, tiltAngle] : [0,0,0] ,
+      rotation_tlr:tilt ?  [ -tiltAngle, tiltAngle,-tiltAngle] : [0,0,0] ,
+      rotation_blf:tilt ?  [ -tiltAngle,-tiltAngle, tiltAngle] : [0,0,0] ,
+      rotation_blr:tilt ?  [ -tiltAngle,-tiltAngle,-tiltAngle] : [0,0,0] ,
       reset: true,
       reverse: flip,
-      delay: 200,
+      delay: 20,
       config: config.wobbly,
       onRest: () => set(!flip),
     })
