@@ -67,9 +67,9 @@ function BoxCube(props){
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
       if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
-        count % 3 === 0 ? setSpacing(Math.sin(clock.getElapsedTime())) : setSpacing(0)
+        count % 3 === 0 ? setSpacing(Math.sin(clock.getElapsedTime())/10) : setSpacing(0)
         setTimeout( () => {
-            console.log(space)
+            console.log(mesh.current.children.find( box => box.name === "top-right-front"))
             setCounter(count + 1)
             setOn(false)
           },
