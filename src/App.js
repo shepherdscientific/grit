@@ -19,7 +19,7 @@ function Grit(props){
     <Box position={[-12.85, 0.5 , -4.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
     <Box position={[-14.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
     <Box position={[-5.45, 0.5 , 1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
-    <Box position={[2.75, .65 , -1.4]} rotation={[ 0,0,0]}/>  
+    <Box position={[2.75, .65 , -1.4]} rotation={[ Math.PI/2,Math.PI/2,Math.PI/2]}/>  
     </mesh>
   );
 } 
@@ -87,7 +87,7 @@ function BoxCube(props){
     useEffect(() => {
       setCounter(count + 1)
       count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
-      count % 1 === 0 && on ? setTilting(true): setTilting(false)
+      count % 5 === 0 && on ? setTilting(true): setTilting(false)
     },[on])
     const [flip, set] = useState(false)
     const springs = useSpring({ 
@@ -99,14 +99,14 @@ function BoxCube(props){
       position_tlr:space ?  [-0.18, 0.18,-0.18] : [-0.325, 0.275,-0.325] ,
       position_blf:space ?  [-0.18,-0.18, 0.18] : [-0.325,-0.275, 0.325] ,
       position_blr:space ?  [-0.18,-0.18,-0.18] : [-0.325,-0.275,-0.325] ,
-      rotation_trf:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_trr:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_brf:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_brr:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_tlf:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_tlr:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_blf:tilt ?  [0,0,0] : [0,0,0] ,
-      rotation_blr:tilt ?  [0,0,0] : [0,0,0] ,
+      rotation_trf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_trr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_brf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_brr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_tlf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_tlr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_blf:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
+      rotation_blr:tilt ?  [ Math.PI/4,Math.PI/4,Math.PI/4] : [0,0,0] ,
       reset: true,
       reverse: flip,
       delay: 200,
@@ -120,14 +120,14 @@ function BoxCube(props){
         ref={mesh}         
        >
         <Sphere name={"pointLight"} position={[0,0,0]} />
-        <Box position={springs.position_trf} name={"top-right-front"} color="green"/>
-        <Box position={springs.position_trr} name={"top-right-rear"} color={'green'}/>        
-        <Box position={springs.position_brf} name={"bottom-right-front"} color={'green'}/>
-        <Box position={springs.position_brr} name={"bottom-right-rear"} color={'green'}/>
-        <Box position={springs.position_tlf} name={"top-left-front"} color={'green'}/>
-        <Box position={springs.position_tlr} name={"top-left-rear"} color={'green'}/>
-        <Box position={springs.position_blf} name={"bottom-left-front"} color={'gold'}/>
-        <Box position={springs.position_blr} name={"bottom-left-rear"} color={'green'}/>
+        <Box position={springs.position_trf} rotation={springs.rotation_trf} name={"trf"} color="green"/>
+        <Box position={springs.position_trr} rotation={springs.rotation_trr} name={"trr"} color={'green'}/>        
+        <Box position={springs.position_brf} rotation={springs.rotation_brf} name={"brf"} color={'green'}/>
+        <Box position={springs.position_brr} rotation={springs.rotation_brf} name={"brr"} color={'green'}/>
+        <Box position={springs.position_tlf} rotation={springs.rotation_tlf} name={"tlf"} color={'green'}/>
+        <Box position={springs.position_tlr} rotation={springs.rotation_tlf} name={"tlr"} color={'green'}/>
+        <Box position={springs.position_blf} rotation={springs.rotation_blf} name={"blf"} color={'gold'}/>
+        <Box position={springs.position_blr} rotation={springs.rotation_blf} name={"blr"} color={'green'}/>
                 
       </mesh>
     </FlashingContext.Provider>
