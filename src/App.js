@@ -1,7 +1,7 @@
 import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
-import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
+import React, { Suspense, useRef, useState, useContext, createContext, useEffect } from 'react'
 import { OrbitControls, Cloud, Sky, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { useSpring, animated, config } from '@react-spring/three'
@@ -71,30 +71,42 @@ function BoxCube(props){
     const [on, setOn] = useState(false)
     const [count, setCounter] = useState(0)
     // const [tilt, setTilt] = useState(0)
-    const [space, setSpacing] = useState(0)
+    const [space, setSpacing] = useState(false)
     useFrame(({clock}) => {
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
       if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
-        count % 3 === 0 ? setSpacing(Math.sin(clock.getElapsedTime())/10) : setSpacing(0)
         setTimeout( () => {
-            // console.log(mesh.current.children.find( box => box.name === "top-right-front"))
+            // console.log(space)
             setCounter(count + 1)
+            // setSpacing(false)
             setOn(false)
           },
         1000)
       }
     })
+    useEffect(() => {
+      count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
+
+    },[on])
     const [flip, set] = useState(false)
     const springs = useSpring({ 
-      scale: on ? 1.15 : 1,
-      // to: { opacity: 1 },
-      // from: { opacity: 0 },
-      // reset: true,
-      // reverse: flip,
+      position_trf:space ?  [ 0.18, 0.18, 0.18] : [ 0.325, 0.275, 0.325] ,
+      position_trr:space ?  [ 0.18, 0.18,-0.18] : [ 0.325, 0.275,-0.325] ,
+      position_brf:space ?  [ 0.18,-0.18, 0.18] : [ 0.325,-0.275, 0.325] ,
+      position_brr:space ?  [ 0.18,-0.18,-0.18] : [ 0.325,-0.275,-0.325] ,
+      position_tlf:space ?  [-0.18, 0.18, 0.18] : [-0.325, 0.275, 0.325] ,
+      position_tlr:space ?  [-0.18, 0.18,-0.18] : [-0.325, 0.275,-0.325] ,
+      position_blf:space ?  [-0.18,-0.18, 0.18] : [-0.325,-0.275, 0.325] ,
+      position_blr:space ?  [-0.18,-0.18,-0.18] : [-0.325,-0.275,-0.325] ,
+
+
+
+      reset: true,
+      reverse: flip,
       // delay: 200,
-      config: config.wobbly,
-      // onRest: () => set(!flip),
+      config: config.molasses,
+      onRest: () => set(!flip),
     })
     // breathing and tilting cubes
     const [ x_pos, y_pos, z_pos ] = [0.325,0.275,0.325]
@@ -107,14 +119,14 @@ function BoxCube(props){
         
        >
         <Sphere name={"pointLight"} position={[0,0,0]} />
-        <Box scale={springs.scale} style={springs} position={[ x_pos,  y_pos,  z_pos]} name={"top-right-front"} color="green"/>
-        <Box position={[ x_pos,  y_pos, -z_pos]} name={"top-right-rear"} color={'green'}/>        
-        <Box position={[ x_pos, -y_pos,  z_pos]} name={"bottom-right-front"} color={'green'}/>
-        <Box position={[ x_pos, -y_pos, -z_pos]} name={"bottom-right-rear"} color={'green'}/>
-        <Box position={[-x_pos,  y_pos,  z_pos]} name={"top-left-front"} color={'green'}/>
-        <Box position={[-x_pos,  y_pos, -z_pos]} name={"top-left-rear"} color={'green'}/>
-        <Box position={[-x_pos, -y_pos,  z_pos]} name={"bottom-left-front"} color={'gold'}/>
-        <Box position={[-x_pos, -y_pos, -z_pos]} name={"bottom-left-rear"} color={'green'}/>
+        <Box position={springs.position_trf} name={"top-right-front"} color="green"/>
+        <Box position={springs.position_trr} name={"top-right-rear"} color={'green'}/>        
+        <Box position={springs.position_brf} name={"bottom-right-front"} color={'green'}/>
+        <Box position={springs.position_brr} name={"bottom-right-rear"} color={'green'}/>
+        <Box position={springs.position_tlf} name={"top-left-front"} color={'green'}/>
+        <Box position={springs.position_tlr} name={"top-left-rear"} color={'green'}/>
+        <Box position={springs.position_blf} name={"bottom-left-front"} color={'gold'}/>
+        <Box position={springs.position_blr} name={"bottom-left-rear"} color={'green'}/>
                 
       </mesh>
     </FlashingContext.Provider>
