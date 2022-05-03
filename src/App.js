@@ -80,23 +80,20 @@ function BoxCube(props){
         setTimeout( () => { setOn(false) }, 1000)
       }
     })
-    // breathing and tilting cubes with spring on every 4th flash
+    // breathing and tilting cubes with spring on every 3rd and Nth flash respectively
     useEffect(() => {
       if (on){
         if (count % 3 === 0){
           setSpacing(true)
           setTimeout( () => { setSpacing(false) }, 1000)
-          console.log("spacing cubes",count)
         }else if (count % 5 === 0){
           setTilting(true)
           setTimeout( () => { setTilting(false) }, 1000)
-          console.log("tilting cubes", count)
+        }else if (count % 2 === 0){
+          // blink through the cubes
         }
-        console.log("flashing cubes", count)
         setCounter(count + 1)
       }
-      // count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
-      // count % 5 === 0 && on ? setTilting(true): setTilting(false)
     },[on])
     const [flip, set] = useState(false)
     const springs = useSpring({ 
