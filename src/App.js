@@ -19,6 +19,7 @@ function Grit(props){
     <Box position={[-12.85, 0.5 , -4.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
     <Box position={[-14.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
     <Box position={[-5.45, 0.5 , 1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
+    <Box position={[2.75, .65 , -1.4]} rotation={[ 0,0,0]}/>  
     </mesh>
   );
 } 
@@ -85,8 +86,8 @@ function BoxCube(props){
     // breathing and tilting cubes with spring on every 4th flash
     useEffect(() => {
       setCounter(count + 1)
-      count % 2 === 0 && on ? setSpacing(true): setSpacing(false)
-      count % 2 === 0 && on ? setTilting(true): setTilting(false)
+      count % 3 === 0 && on ? setSpacing(true): setSpacing(false)
+      count % 1 === 0 && on ? setTilting(true): setTilting(false)
     },[on])
     const [flip, set] = useState(false)
     const springs = useSpring({ 
