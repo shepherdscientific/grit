@@ -2,14 +2,22 @@ import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
 import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
-import { OrbitControls, Cloud, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
+import { OrbitControls, Cloud, Sky, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
+import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 
 function Grit(props){
   return (
     <mesh {...props}>
     <Model position={[0, 0, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
     <BoxCube position={[1.125, 1.4, -.85]} rotation={[ 0 , 0 , 0]}/>
-    <Box position={[3.45, 0.6 , -1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
+    <Box position={[3.75, .65 , -1.4]} rotation={[ 0,0,0]}/>    
+    <Box position={[3.15, 0.5 , -1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
+    <Box position={[5.95, 0.5 , -9.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
+    <Box position={[4.85, 0.5 , -10.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
+    <Box position={[-5.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
+    <Box position={[-12.85, 0.5 , -4.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
+    <Box position={[-14.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
+    <Box position={[-5.45, 0.5 , 1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
     </mesh>
   );
 } 
@@ -101,10 +109,17 @@ function BoxCube(props){
 function App() {
   return (
     <Canvas gl={{ alpha: false }} dpr={[1, 1.5]} /* shadows colorManagement */ camera={{fov:70, near: 0.1, far: 1000,position:[1.3,0.72,2.95]}}> 
+      <EffectComposer>
+        <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
+        <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
+        <Noise opacity={0.02} />
+        <Vignette eskil={false} offset={0.1} darkness={1.1} />
+      </EffectComposer>    
       <OrbitControls/>
-      <Cloud/>
-      <Sparkles/>
-      <Stars/>
+      <Cloud opacity={0.4} speed={0.4} width={25} depth={0.5} segments={5}/>
+      <Sky distance={450000} sunPosition={[1, -1, 1]} inclination={9} azimuth={10.25}  />
+      {/* <Sparkles/> */}
+      {/* <Stars/> */}
       <color attach="background" args={['#191920']} />
       <fog attach="fog" args={['#191920', 0, 15]} />
       <Environment preset="city" />  
