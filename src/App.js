@@ -3,7 +3,6 @@ import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
 import React, { Suspense, useRef, useState, useContext, createContext } from 'react'
 import { OrbitControls, Cloud, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
-// import { Clock } from 'three';
 
 function Grit(props){
   return (
@@ -62,13 +61,13 @@ function BoxCube(props){
     const mesh = useRef()
     const [on, setOn] = useState(false)
     const [count, setCounter] = useState(0)
-    const [tilt, setTilt] = useState(0)
+    // const [tilt, setTilt] = useState(0)
     const [space, setSpacing] = useState(0)
     useFrame(({clock}) => {
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
       if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
-        count % 3 == 0 ? setSpacing(Math.sin(clock.getElapsedTime())) : setSpacing(0)
+        count % 3 === 0 ? setSpacing(Math.sin(clock.getElapsedTime())) : setSpacing(0)
         setTimeout( () => {
             console.log(space)
             setCounter(count + 1)
