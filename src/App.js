@@ -160,7 +160,7 @@ function BoxCube(props){
 
 function App() {
   return (
-    <Canvas gl={{ alpha: false }} dpr={[1, 1.5]} /* shadows colorManagement */ camera={{fov:70, near: 0.1, far: 1000,position:[1.3,0.72,2.95]}}> 
+    <Canvas gl={{ alpha: false }} dpr={[1, 1.5]} /* shadows colorManagement */ camera={ Math.round(Math.random()) ? {fov:70, near: 0.1, far: 1000,position:[1.3,0.72,2.95]} : {fov:70, near: 0.1, far: 1000,position:[0,1,5]}}> 
       <EffectComposer>
         <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
         <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
