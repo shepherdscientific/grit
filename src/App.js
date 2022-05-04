@@ -7,19 +7,33 @@ import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-thr
 import { useSpring, animated, config } from '@react-spring/three'
 
 function Grit(props){
+  var randBoxes = Array.from(Array(8).keys(),(x) => {
+    return { key: x , position:[], rotation:[] };
+  });
+  randBoxes.forEach((key,value) => {
+    if (Math.round(Math.random())){
+      key.rotation = [ 0 , Math.PI/( 2 + Math.round(Math.random()) * 4 ) , 0 ]
+      key.position = [ Math.random()*20 - 14 , 0.65, Math.random()*15 - 10 ]
+    }else{
+      key.rotation = [ Math.PI/( 2 + Math.round(Math.random()) * 4 ) , Math.PI/( 2 + Math.round(Math.random()) * 4 ) , Math.PI/( 2 + Math.round(Math.random()) * 4 ) ]
+      key.position = [ Math.random()*20 - 14 , 0.4 + Math.random()/3 , Math.random()*15 - 10 ]
+    }
+    console.log(key,value)
+  })
   return (
     <mesh {...props}>
     <Model position={[0, 0, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
     <BoxCube position={[1.125, 1.4, -.85]} rotation={[ 0 , 0 , 0]}/>
-    <Box position={[3.75, .65 , -1.4]} rotation={[ 0,0,0]}/>    
+    {randBoxes.map((props) => <Box key={props.url} {...props} /> )}
+    {/* <Box position={[3.75, .65 , -1.4]} rotation={[ 0, Math.PI/( 2 + Math.round(Math.random()) * 4 ),0]}/>    
+    <Box position={[2.75, .65, -1.4]} rotation={[ 0, 0, 0]}/>  
     <Box position={[3.15, 0.5 , -1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
     <Box position={[5.95, 0.5 , -9.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
     <Box position={[4.85, 0.5 , -10.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
     <Box position={[-5.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
     <Box position={[-12.85, 0.5 , -4.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
     <Box position={[-14.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
-    <Box position={[-5.45, 0.5 , 1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
-    <Box position={[2.75, .65 , -1.4]} rotation={[ Math.PI/2,Math.PI/2,Math.PI/2]}/>  
+    <Box position={[-5.45, 0.5 , 1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>     */}
     </mesh>
   );
 } 
