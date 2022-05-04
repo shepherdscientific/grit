@@ -2,7 +2,7 @@ import './App.css';
 import Model from './Gri'
 import { Canvas, useFrame } from '@react-three/fiber'
 import React, { Suspense, useRef, useState, useContext, createContext, useEffect } from 'react'
-import { OrbitControls, Cloud, Sky, Sparkles, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
+import { OrbitControls, Cloud, Sky, Stars, MeshReflectorMaterial, Environment, Html, useProgress } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { useSpring, animated, config } from '@react-spring/three'
 
@@ -52,6 +52,7 @@ function Box(props) {
   const [hovered, setHover] = useState(false)
   const [active, setActive] = useState(false)
   const size = .35
+  // console.log(props.color) 
   return (
     <animated.mesh 
       {...props}
@@ -61,7 +62,7 @@ function Box(props) {
       onPointerOver={(event) => setHover(true)}
       onPointerOut={(event) => setHover(false)}>
       <boxGeometry args={[size, size, size]} />
-      <meshStandardMaterial color={hovered ? 'yellow' : (props.color ||'green') } />
+      <meshStandardMaterial color={hovered ? 'yellow' : (props.color) } />
     </animated.mesh>
   );
 }
@@ -73,23 +74,31 @@ function BoxCube(props){
     const [count, setCounter] = useState(1)
     const [tilt, setTilting] = useState(false)
     const [space, setSpacing] = useState(false)
+    const [litbox, setLitBox] = useState(7)
+    const [lightshow, setLightshow] = useState(false)
     useFrame(({clock}) => {
       mesh.current.rotation.y += ( on ? 0 : 0.05 )
       if (mesh.current.rotation.y % Math.PI / 4 <= 0.01 ){
         setOn(true)
         setTimeout( () => { setOn(false) }, 1000)
       }
+      if (lightshow) {
+          litbox === 0 ? setLitBox(7) : setLitBox(litbox -1) 
+      }
     })
     // breathing and tilting cubes with spring on every 3rd and Nth flash respectively
     useEffect(() => {
       if (on){
-        if (count % 3 === 0){
-          setSpacing(true)
-          setTimeout( () => { setSpacing(false) }, 2000)
-        }else if (count % 5 === 0){
+        if (count % 5 === 0){
           setTilting(true)
           setTimeout( () => { setTilting(false) }, 2000)
-        }else if (count % 2 === 0){
+        }else if (count % 3 === 0){
+          setSpacing(true)
+          setTimeout( () => { setSpacing(false) }, 2000)
+        }
+        if (count % 4 === 0){
+          setLightshow(true)
+          setTimeout( () => { setLightshow(false) }, 2000)
           // blink through the cubes
         }
         setCounter(count + 1)
@@ -114,13 +123,18 @@ function BoxCube(props){
       rotation_tlr:tilt ?  [ -tiltAngle, tiltAngle,-tiltAngle] : [0,0,0] ,
       rotation_blf:tilt ?  [ -tiltAngle,-tiltAngle, tiltAngle] : [0,0,0] ,
       rotation_blr:tilt ?  [ -tiltAngle,-tiltAngle,-tiltAngle] : [0,0,0] ,
+      color:lightshow ? {...lightShow(true)} :{...lightShow(false)},
       reset: true,
       reverse: flip,
       delay: 20,
       config: config.wobbly,
       onRest: () => set(!flip),
     })
-    
+    function lightShow(show) {
+      var arr = new Array(8).fill("limegreen")
+      show ? arr[litbox] = "red" : arr[0] = "red"
+      return arr
+    }
     return (
     <FlashingContext.Provider value={on}>
       <mesh 
@@ -128,14 +142,14 @@ function BoxCube(props){
         ref={mesh}         
        >
         <Sphere name={"pointLight"} position={[0,0,0]} />
-        <Box position={springs.position_trf} rotation={springs.rotation_trf} name={"trf"} color="green"/>
-        <Box position={springs.position_trr} rotation={springs.rotation_trr} name={"trr"} color={'green'}/>        
-        <Box position={springs.position_brf} rotation={springs.rotation_brf} name={"brf"} color={'green'}/>
-        <Box position={springs.position_brr} rotation={springs.rotation_brf} name={"brr"} color={'green'}/>
-        <Box position={springs.position_tlf} rotation={springs.rotation_tlf} name={"tlf"} color={'green'}/>
-        <Box position={springs.position_tlr} rotation={springs.rotation_tlf} name={"tlr"} color={'green'}/>
-        <Box position={springs.position_blf} rotation={springs.rotation_blf} name={"blf"} color={'gold'}/>
-        <Box position={springs.position_blr} rotation={springs.rotation_blf} name={"blr"} color={'green'}/>
+        <Box position={springs.position_trf} rotation={springs.rotation_trf} name={"trf"} color={ litbox === 1 ? "yellow" : "green" }/>
+        <Box position={springs.position_trr} rotation={springs.rotation_trr} name={"trr"} color={ litbox === 2 ? "yellow" : "green" }/>        
+        <Box position={springs.position_brf} rotation={springs.rotation_brf} name={"brf"} color={ litbox === 3 ? "yellow" : "green" }/>
+        <Box position={springs.position_brr} rotation={springs.rotation_brf} name={"brr"} color={ litbox === 4 ? "yellow" : "green" }/>
+        <Box position={springs.position_tlf} rotation={springs.rotation_tlf} name={"tlf"} color={ litbox === 5 ? "yellow" : "green" }/>
+        <Box position={springs.position_tlr} rotation={springs.rotation_tlf} name={"tlr"} color={ litbox === 6 ? "yellow" : "green" }/>
+        <Box position={springs.position_blf} rotation={springs.rotation_blf} name={"blf"} color={ litbox === 7 ? "yellow" : "green" }/>
+        <Box position={springs.position_blr} rotation={springs.rotation_blf} name={"blr"} color={ litbox === 0 ? "yellow" : "green" }/>
                 
       </mesh>
     </FlashingContext.Provider>
