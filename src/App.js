@@ -46,7 +46,7 @@ function Sphere(props) {
         onClick={(event) => setActive(!active)}
         onPointerOver={(event) => setHover(true)}
         onPointerOut={(event) => setHover(false)}>
-        <BallLight brightness={54} color="#fff"/>
+        <pointLight castShadow intensity={flashing  ? 10 : 0 } shadow-mapSize-height={512} shadow-mapSize-width={512} />
         <sphereGeometry args={[.025,16,16]} />
         <meshStandardMaterial color={( flashing || hovered ) ? 'white' : 'red'} />
       </mesh>
@@ -210,17 +210,6 @@ function Loader() {
 }
 
 // Lights
-function BallLight({ brightness, color }){
-  const flashing = useContext(FlashingContext);  
-  return(
-    <pointLight 
-      castShadow 
-      intensity={flashing  ? 10 : 0 }
-      shadow-mapSize-height={512}
-      shadow-mapSize-width={512}
-    />
-  );
-}
 
 function KeyLight({ brightness, color }) {
   return (
