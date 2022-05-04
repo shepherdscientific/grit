@@ -6,34 +6,25 @@ import { OrbitControls, Cloud, Sky, Stars, MeshReflectorMaterial, Environment, H
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { useSpring, animated, config } from '@react-spring/three'
 
+function randomNumber(min, max){
+  return  Math.random()*(max-min) + min
+}
+
+var randBoxes = Array.from(Array(8).keys(),(x) => {
+  return { key: x , position:[], rotation:[] };
+});
+randBoxes.forEach((key,value) => {
+  const state = Math.round(Math.random())
+  key.rotation = state ? [ 0 , randomNumber(0.5,1.5) , 0 ] : [ randomNumber(0.5,1.5), randomNumber(0.5,1.5) , randomNumber(0.5,1.5) ]
+  key.position = state ? [ randomNumber(-6,15) , 0.65, Math.random()*15 - 10 ] : [ randomNumber(-6,15) , randomNumber(0.4,0.65) , randomNumber(-11,2) ]
+})
+
 function Grit(props){
-  var randBoxes = Array.from(Array(8).keys(),(x) => {
-    return { key: x , position:[], rotation:[] };
-  });
-  randBoxes.forEach((key,value) => {
-    if (Math.round(Math.random())){
-      key.rotation = [ 0 , Math.PI/( 2 + Math.round(Math.random()) * 4 ) , 0 ]
-      key.position = [ Math.random()*20 - 14 , 0.65, Math.random()*15 - 10 ]
-    }else{
-      key.rotation = [ Math.PI/( 2 + Math.round(Math.random()) * 4 ) , Math.PI/( 2 + Math.round(Math.random()) * 4 ) , Math.PI/( 2 + Math.round(Math.random()) * 4 ) ]
-      key.position = [ Math.random()*20 - 14 , 0.4 + Math.random()/3 , Math.random()*15 - 10 ]
-    }
-    console.log(key,value)
-  })
+
   return (
     <mesh {...props}>
     <Model position={[0, 0, 0]} rotation={[ Math.PI / 2 , 0 , 0]} scale={[ 1, 1 , 1]}  />   
     <BoxCube position={[1.125, 1.4, -.85]} rotation={[ 0 , 0 , 0]}/>
-    {randBoxes.map((props) => <Box key={props.url} {...props} /> )}
-    {/* <Box position={[3.75, .65 , -1.4]} rotation={[ 0, Math.PI/( 2 + Math.round(Math.random()) * 4 ),0]}/>    
-    <Box position={[2.75, .65, -1.4]} rotation={[ 0, 0, 0]}/>  
-    <Box position={[3.15, 0.5 , -1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
-    <Box position={[5.95, 0.5 , -9.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
-    <Box position={[4.85, 0.5 , -10.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>    
-    <Box position={[-5.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
-    <Box position={[-12.85, 0.5 , -4.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
-    <Box position={[-14.85, 0.5 , -2.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]} />    
-    <Box position={[-5.45, 0.5 , 1.4]} rotation={[ Math.PI / 3 , Math.PI / 3 , Math.PI / 3]}/>     */}
     </mesh>
   );
 } 
@@ -137,18 +128,15 @@ function BoxCube(props){
       rotation_tlr:tilt ?  [ -tiltAngle, tiltAngle,-tiltAngle] : [0,0,0] ,
       rotation_blf:tilt ?  [ -tiltAngle,-tiltAngle, tiltAngle] : [0,0,0] ,
       rotation_blr:tilt ?  [ -tiltAngle,-tiltAngle,-tiltAngle] : [0,0,0] ,
-      color:lightshow ? {...lightShow(true)} :{...lightShow(false)},
       reset: true,
       reverse: flip,
       delay: 20,
       config: config.wobbly,
       onRest: () => set(!flip),
     })
-    function lightShow(show) {
-      var arr = new Array(8).fill("limegreen")
-      show ? arr[litbox] = "red" : arr[0] = "red"
-      return arr
-    }
+
+
+    
     return (
     <FlashingContext.Provider value={on}>
       <mesh 
@@ -164,8 +152,8 @@ function BoxCube(props){
         <Box position={springs.position_tlr} rotation={springs.rotation_tlf} name={"tlr"} color={ litbox === 6 ? "yellow" : "green" }/>
         <Box position={springs.position_blf} rotation={springs.rotation_blf} name={"blf"} color={ litbox === 7 ? "yellow" : "green" }/>
         <Box position={springs.position_blr} rotation={springs.rotation_blf} name={"blr"} color={ litbox === 0 ? "yellow" : "green" }/>
-                
       </mesh>
+      {randBoxes.map((prop) => <Box key={prop.key} position={prop.position} rotation={prop.rotation} color={ litbox === parseInt(prop.key) ? "yellow" : "green" }  /> )}                
     </FlashingContext.Provider>
   );
 }
